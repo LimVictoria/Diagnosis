@@ -5,7 +5,7 @@ from halo import Halo
 import textwrap
 import yaml
 import streamlit as st
-from streamlit_chat import message
+from streamlit_chat import conversation
 import toml
 
 ###     file operations
