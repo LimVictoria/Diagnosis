@@ -23,7 +23,7 @@ def open_file(filepath):
 ###     API functions
 
 
-def chatbot(conversation, model="gpt-4-0613", temperature=0, max_tokens=2000):
+def chatbot(conversation, model="gpt-3.5-turbo-0125", temperature=0, max_tokens=2000):
     max_retry = 7
     retry = 0
     while True:
@@ -49,7 +49,8 @@ def chat_print(text):
 
 
 if __name__ == '__main__':
-    openai.api_key = open_file('key_openai.txt').strip()
+    openai.api_key = st.secrets["api_secret"]
+
     
     conversation = list()
     conversation.append({'role': 'system', 'content': open_file('system_01_intake.md')})
