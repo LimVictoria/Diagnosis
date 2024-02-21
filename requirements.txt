@@ -1,3 +1,6 @@
 halo
 openai
 pyyaml
+openai==0.28
+streamlit 
+streamlit-chat
