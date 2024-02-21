@@ -17,7 +17,7 @@ def open_file(filepath):
 ### API functions
 openai.api_key = st.secrets["api_secret"]
 
-def generate_response(conversation, temperature=0, model="gpt-3.5-turbo-0125"):
+def generate_response(conversation, temperature=0, model="gpt-3.5-turbo-1106"):
     try:
         response = openai.ChatCompletion.create(
             model=model,
