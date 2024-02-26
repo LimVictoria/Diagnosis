@@ -23,7 +23,7 @@ def open_file(filepath):
 
 ###     API functions
 
-openai.api_key = st.secrets["api_secret"]
+
 def chatbot(conversation, model="gpt-3.5-turbo-0125", temperature=0, max_tokens=2000):
     max_retry = 7
     retry = 0
@@ -51,37 +51,51 @@ def chat_print(text):
     print('\n\n\nCHATBOT:\n\n%s' % formatted_text)
 
 
-# Define function to get user input
-def get_text():
-    input_text = st.text_area("Medical Inquiries: ", key="input")
-    return input_text
-
-
-
-
 ########################################################################################################################
 
 if __name__ == '__main__':
+    openai.api_key = st.secrets["api_secret"]
+
+    # Display image
+    st.sidebar.image("https://raw.githubusercontent.com/LimVictoria/GPT-EMR-Chatbot/main/bot.webp",
+                     use_column_width=True)  # ,caption="GPT–EMR")
+
+    # Create a slider for temperature
+    temperature = st.sidebar.slider('Creativity of generated responses', min_value=0.1, max_value=1.0, step=0.1,
+                                    value=0.5)
+    # st.sidebar.write("Adjust temperature with low temperature for accurate response, high temperature for creativity.")
+
+    # Display title
+    st.title("GPT–EMR Chatbot")
+
     conversation = list()
     conversation.append({'role': 'system', 'content': open_file('system_01_intake.md')})
     user_messages = list()
     all_messages = list()
-    st.write('Describe your symptoms to the intake bot. Type DONE when done.')
+    #st.write("Describe your symptoms to the GPT–EMR Chatbot. Type DONE when done.")
 
+    ## INTAKE PORTION
 
-    while True:
+    text = None
+    input_index = 0
+
+    # Loop until user types "DONE"
+    while text != 'DONE':
         # get user input
-        text = st.text_area("Medical Inquiries: ", None)
-        if text == 'DONE':
-            break
-        user_messages.append(text)
-        all_messages.append('PATIENT: %s' % text)
-        conversation.append({'role': 'user', 'content': text})
-        response, tokens = chatbot(conversation)
-        conversation.append({'role': 'assistant', 'content': response})
-        all_messages.append('INTAKE: %s' % response)
-        st.write('\n\nINTAKE: %s' % response)
-        print('\n\nINTAKE: %s' % response)
+        
+        text = st.text_area("Describe your symptoms to the GPT–EMR Chatbot. Type DONE when done.",
+                            key=f"input_{input_index}", value=None)
+        input_index += 1
+
+        if text != 'DONE':
+            user_messages.append(text)
+            all_messages.append('PATIENT: %s' % text)
+            conversation.append({'role': 'user', 'content': text})
+            response, tokens = chatbot(conversation)
+            conversation.append({'role': 'assistant', 'content': response})
+            all_messages.append('INTAKE: %s' % response)
+            st.write('\n\nGPT–EMR Chatbot: %s' % response)
+            print('\n\nINTAKE: %s' % response)
 
     ########################################################################################################################
 
@@ -126,4 +140,3 @@ if __name__ == '__main__':
     referrals, tokens = chatbot(conversation)
     st.write('\n\nReferrals and Tests:\n\n%s' % referrals)
     print('\n\nReferrals and Tests:\n\n%s' % referrals)
-
